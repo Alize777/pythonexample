@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Survey Form</title>
+  <link rel="stylesheet" href="style1.css">
+</head>
+
+<body>
+
+  <h1 id="title">Student Survey Form</h1>
+
+  <p id="description">
+    Tell us about your interests and learning goals.
+  </p>
+
+  <form id="survey-form">
+    <label id="name-label" for="name">Your Name</label>
+    <input id="name" type="text" placeholder="Enter your name" required>
+
+    <label id="email-label" for="email">Your Email</label>
+    <input id="email" type="email" placeholder="Enter your email" required>
+
+    <label id="number-label" for="number">Your Age</label>
+    <input id="number" type="number" min="10" max="100" placeholder="Enter your age">
+
+    <label for="dropdown">Эмне окугунуз келет?</label>
+    <select id="dropdown">
+      <option value="python">Python</option>
+      <option value="html">HTML and CSS</option>
+      <option value="cybersecurity">Cybersecurity</option>
+    </select>
+
+    <p>как вы хотите учиться</p>
+
+    <label>
+      <input type="radio" name="study" value="alone">
+      Alone
+    </label>
+
+    <label>
+      <input type="radio" name="study" value="group">
+      In a group
+    </label>
+
+    <p>What are your interests?</p>
+
+    <label>
+      <input type="checkbox" value="coding">
+      Coding
+    </label>
+
+    <label>
+      <input type="checkbox" value="design">
+      Design
+    </label>
+
+    <label>
+      <input type="checkbox" value="security">
+      кибербезопасность
+    </label>
+
+    <label for="comments">напишите коммент</label>
+    <textarea id="comments" placeholder="Write your comments here" rows="4"></textarea>
+
+    <button id="submit" type="submit">отправить</button>
+
+  </form>
+
+</body>
+</html>

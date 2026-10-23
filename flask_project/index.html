@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Flask App</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+}
+
+.container {
+    width: 500px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+button {
+    padding: 10px;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+hr {
+    margin: 20px 0;
+}
+
+.post, .user {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LOGIN / REGISTER -->
+<div id="auth">
+    <h2>Login</h2>
+    <input id="loginUser" placeholder="username">
+    <input id="loginPass" type="password" placeholder="password">
+    <button onclick="login()">Login</button>
+
+    <hr>
+
+    <h2>Register</h2>
+    <input id="regUser" placeholder="username">
+    <input id="regPass" type="password" placeholder="password">
+    <button onclick="register()">Register</button>
+
+    <p id="msg"></p>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+
+    <h2>Dashboard</h2>
+    <p>Welcome <b id="userName"></b></p>
+
+    <button onclick="logout()">Logout</button>
+
+    <hr>
+
+    <h3>Create Post</h3>
+    <input id="postTitle" placeholder="title">
+    <input id="postContent" placeholder="content">
+    <button onclick="createPost()">Add Post</button>
+
+    <hr>
+
+    <h3>Posts</h3>
+    <div id="posts"></div>
+
+    <hr>
+
+    <h3>Users</h3>
+    <div id="users"></div>
+
+</div>
+
+</div>
+
+<script>
+// ========== LOGIN ==========
+function login() {
+    fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            username: loginUser.value,
+            password: loginPass.value
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.message) {
+            showDashboard(loginUser.value);
+        } else {
+            msg.innerText = data.error;
+        }
+    });
+}
+
+// ========== REGISTER ==========
+function register() {
+    fetch('/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            username: regUser.value,
+            password: regPass.value
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        msg.innerText = data.message || data.error;
+    });
+}
+
+// ========== SHOW DASHBOARD ==========
+function showDashboard(username) {
+    auth.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    userName.innerText = username;
+
+    loadPosts();
+    loadUsers();
+}
+
+// ========== LOGOUT ==========
+function logout() {
+    fetch('/logout')
+    .then(() => {
+        location.reload();
+    });
+}
+
+// ========== POSTS ==========
+function createPost() {
+    fetch('/posts', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            title: postTitle.value,
+            content: postContent.value
+        })
+    })
+    .then(() => loadPosts());
+}
+
+function loadPosts() {
+    fetch('/posts')
+    .then(r => r.json())
+    .then(data => {
+        posts.innerHTML = "";
+        data.forEach(p => {
+            posts.innerHTML += `
+                <div class="post">
+                    <b>${p.title}</b><br>
+                    ${p.content}
+                </div>
+            `;
+        });
+    });
+}
+
+// ========== USERS ==========
+function loadUsers() {
+    fetch('/users/')
+    .then(r => r.json())
+    .then(data => {
+        users.innerHTML = "";
+        data.forEach(u => {
+            users.innerHTML += `<div class="user">${u.username}</div>`;
+        });
+    });
+}
+</script>
+
+</body>
+</html>
